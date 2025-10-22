@@ -16,7 +16,7 @@ public class ControladorGaiola : MonoBehaviour
         if (distancia <= distanciaFechamento)
         {
             animator.SetTrigger("fechar");
-            jaFechou = true; // garante que não vai repetir
+            jaFechou = true; 
         }else
         {
             animator.SetTrigger("fechar");

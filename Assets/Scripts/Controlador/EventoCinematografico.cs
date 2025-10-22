@@ -19,17 +19,22 @@ public class EventoCinematografico : MonoBehaviour
     public GameObject[] grupoX;
     public GameObject[] grupoY;
 
-    public float tempoInicial = 1f;   // tempo antes de ligar os grupos
-    public float tempoAlternancia = 1f; // tempo de alternância entre grupos
-    public float duracaoTotal = 5f;   // tempo total antes de desligar tudo
+    [Header("UI")]
+    public GameObject panelPerguntas; 
+
+    public float tempoInicial = 1f;
+    public float tempoAlternancia = 1f;
+    public float duracaoTotal = 5f;
 
     private bool jaAtivou = false;
 
     void Start()
     {
-        // Inicialmente, todos os objetos desligados
         SetAtivos(grupoX, false);
         SetAtivos(grupoY, false);
+
+        if (panelPerguntas != null)
+            panelPerguntas.SetActive(false);
     }
 
     void Update()
@@ -46,16 +51,13 @@ public class EventoCinematografico : MonoBehaviour
 
     IEnumerator AtivarEventoComAlternancia()
     {
-        // 1️⃣ Anima a gaiola
         if (animatorGaiola != null)
             animatorGaiola.SetTrigger(triggerFechar);
 
-        // 2️⃣ Ajusta iluminação
         RenderSettings.ambientIntensity = intensidadeAmbienteNormal;
         if (spotLuz != null)
             spotLuz.enabled = false;
 
-        // 3️⃣ Espera tempo inicial antes de ligar
         yield return new WaitForSeconds(tempoInicial);
 
         float tempoPassado = 0f;
@@ -66,14 +68,29 @@ public class EventoCinematografico : MonoBehaviour
             SetAtivos(grupoX, estado);
             SetAtivos(grupoY, !estado);
 
-            estado = !estado; // alterna para o próximo ciclo
+            estado = !estado;
             yield return new WaitForSeconds(tempoAlternancia);
             tempoPassado += tempoAlternancia;
         }
 
-        // 4️⃣ Desliga tudo no final
+        
         SetAtivos(grupoX, false);
         SetAtivos(grupoY, false);
+
+        
+        yield return new WaitForSeconds(1f);
+
+        if (panelPerguntas != null)
+        {
+            panelPerguntas.SetActive(true);
+
+            
+            Time.timeScale = 0f;
+
+            
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
 
     void SetAtivos(GameObject[] objetos, bool ativo)
