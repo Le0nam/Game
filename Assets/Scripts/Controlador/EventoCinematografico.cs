@@ -28,8 +28,16 @@ public class EventoCinematografico : MonoBehaviour
 
     private bool jaAtivou = false;
 
+    private Light led1;
+    private Light led2;
+    private Light led3;
+
     void Start()
     {
+        led1 = GameObject.Find("led1").GetComponent<Light>();
+        led2 = GameObject.Find("led2").GetComponent<Light>();
+        led3 = GameObject.Find("led3").GetComponent<Light>();
+
         SetAtivos(grupoX, false);
         SetAtivos(grupoY, false);
 
@@ -46,11 +54,13 @@ public class EventoCinematografico : MonoBehaviour
         {
             jaAtivou = true;
             StartCoroutine(AtivarEventoComAlternancia());
+            
         }
     }
 
     IEnumerator AtivarEventoComAlternancia()
     {
+        led1.color = Color.green; led2.color = Color.green; led3.color = Color.green;
         if (animatorGaiola != null)
             animatorGaiola.SetTrigger(triggerFechar);
 
